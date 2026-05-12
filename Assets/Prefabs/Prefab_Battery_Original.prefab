@@ -128,10 +128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13a35d4df9357f4eb76d0d534dc0f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Port
-  unitName: 
+  unitName: Input port
   value: 0
   portType: 0
   isConected: 0
+  connectedCable: {fileID: 0}
   selectedColor: {r: 0.9372549, g: 0.4627451, b: 0.4627451, a: 0}
   showColor: {r: 0.83137256, g: 0.2208971, b: 0.2208971, a: 0}
   hideColor: {r: 0.4392157, g: 0.09803922, b: 0.09803922, a: 0}
@@ -350,10 +351,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b13a35d4df9357f4eb76d0d534dc0f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Port
-  unitName: 
+  unitName: Output port
   value: 0
   portType: 1
   isConected: 0
+  connectedCable: {fileID: 0}
   selectedColor: {r: 0.5424528, g: 0.6842028, b: 1, a: 0}
   showColor: {r: 0, g: 0.3108704, b: 1, a: 0}
   hideColor: {r: 0, g: 0.13022566, b: 0.41509432, a: 0}
@@ -454,6 +456,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1726006689514330006}
   - component: {fileID: 3341132519725968218}
+  - component: {fileID: 3851912801494353388}
   m_Layer: 0
   m_Name: Prefab_Battery_Original
   m_TagString: Untagged
@@ -491,15 +494,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b12b29eb44853e46b3e8ffa3cc0df2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerStorage
-  unitName: 
+  unitName: Power storage
   outputPort: {fileID: 6595634148374965735}
   currentOutput: 0
-  maxOutput: 0
+  maxOutput: 5000
   isGeneratingPower: 0
   inputPort: {fileID: 8660701868487172027}
-  maxCapacity: 0
+  maxCapacity: 100000
   currentStorageAmount: 0
   isGenerating: 0
+--- !u!65 &3851912801494353388
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7085998116457587926}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.43, y: 0.16, z: 0.2}
+  m_Center: {x: 0, y: 0.08, z: 0}
 --- !u!1001 &3903765013790731265
 PrefabInstance:
   m_ObjectHideFlags: 0

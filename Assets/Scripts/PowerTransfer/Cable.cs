@@ -10,11 +10,7 @@ public class Cable : MonoBehaviour
     public Port portB;
     public LineRenderer line;
     
-
-    private void Update()
-    {
-        
-    }
+    
 
     public void CreateConnection(Port portA, Port portB, List<Vector3> wirePoints)
     {
@@ -56,14 +52,7 @@ public class Cable : MonoBehaviour
         line.positionCount = wirePoints.Count;
         line.SetPositions(wirePoints.ToArray());
     }
-
-    public void ResetConnection()
-    {
-        portA = null;
-        portB = null;
-        
-        line.positionCount = 0;
-    }
+    
 
     public bool CanCreateConnection()
     {

@@ -30,7 +30,7 @@ public class PowerStorage : PowerSource
         currentOutput = Mathf.Min(currentStorageAmount, maxOutput);
 
         // 4. IMPORTANT: Actually tell the port about the new output! ignored for now until more logic is added
-        // outputPort.SetValue(currentOutput);
+        outputPort.SetValue(currentOutput);
     }
 
     public int GetConnectedDeviceCost()
@@ -38,5 +38,9 @@ public class PowerStorage : PowerSource
         // Placeholder for future logic
         return 0;
     }
-    
+
+    public override void OnDetected()
+    {
+        ElectricUI.instance.ShowStorageName(unitName, currentStorageAmount, maxCapacity, maxOutput);
+    }
 }

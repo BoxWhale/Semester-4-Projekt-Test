@@ -56,4 +56,9 @@ public class Port : ElectricUnit
     {
         rend.material.color = hideColor;
     }
+
+    public override void OnDetected()
+    {
+        ElectricUI.instance.ShowPortName(unitName, value);
+    }
 }

@@ -143,9 +143,10 @@ public class VRWireTool : MonoBehaviour
         
         if (tempCable.line.positionCount == 2)
         {
-            tempCable.ResetConnection();
             wirePoints.Clear();
-            tempCable.line.positionCount = 0;
+            firstSelectedPort.HidePort();
+            firstSelectedPort = null;
+            Destroy(tempCable.gameObject);
             Debug.Log("Cable Selection Cancelled");
         }
         else

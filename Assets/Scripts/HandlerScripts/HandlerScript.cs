@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 // A simple GameHandler
 // Use this script when to apply permanent code logic to the game, such as the time tick system, which is used to send pulses to the breadboard logic and other scripts that need to be updated on a regular basis. This script should be attached to a GameObject in the scene, and it will handle the subscription to the time tick events and the logic that needs to be executed on each tick.
@@ -63,6 +65,14 @@ public class HandlerScript : MonoBehaviour
         {
             Debug.LogWarning($"Failed to assign power source {source.gameObject.name} to HandlerScript: {e.Message}");
             throw;
+        }
+    }
+    void Update()
+    {
+        // This is just a simple way to reset the scene for testing purposes.
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
