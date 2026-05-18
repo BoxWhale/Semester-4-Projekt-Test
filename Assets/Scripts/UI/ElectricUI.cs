@@ -1,14 +1,44 @@
+using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ElectricUI : MonoBehaviour
 {
     public static ElectricUI instance;
-
     void Awake()
     {
         instance = this;
+        if (BumperButton != null)
+        {
+            _bumperColor = BumperButton.GetComponent<Renderer>().material.color;
+            _buttonBColor = ButtonB.GetComponent<Renderer>().material.color;
+        }
     }
+    
+    void OnEnable()
+    {
+        if (TutorialAction.action != null)
+        {
+            TutorialAction.action.performed += TutorialSwitch;
+            TutorialAction.action.Enable();
+        }
+    }
+    public InputActionProperty TutorialAction;
+    public int tutorialStage = 1;
+    
+    [Header("Tutorial Displays")]
+    public Color tutorialHighlightColor = Color.red;
+    [Space(10)]
+    public GameObject tutorialPanelBumper;
+    public TMP_Text tutorialTextBumper;
+    public GameObject BumperButton;
+    private Color _bumperColor;
+    [Space(10)]
+    public GameObject tutorialPanelButtonB;
+    public TMP_Text tutorialTextButtonB;
+    public GameObject ButtonB;
+    private Color _buttonBColor;
 
     [Header("Device Name Display")]
     public GameObject deviceNamePanel;
@@ -30,6 +60,8 @@ public class ElectricUI : MonoBehaviour
         HideDeviceNamePanel();
         HidePortNamePanel();
         HideStorageNamePanel();
+        HideTutorialBumperPanel();
+        HideTutorialButtonB();
     }
     
     public void ShowDeviceName(string deviceName)
@@ -65,12 +97,79 @@ public class ElectricUI : MonoBehaviour
         
         storageNamePanel.SetActive(true);
         storageNameText.text = storageName;
-        storageCapacityText.text = $"{currentStorageAmount} / {maxCapacity}";
-        storageMaxOutputText.text = $"Max output: {storageMaxOutput}";
+        storageCapacityText.text = $"{currentStorageAmount}mV / {maxCapacity}mV";
+        storageMaxOutputText.text = $"Max output: {storageMaxOutput}mV";
     }
 
     public void HideStorageNamePanel()
     {
         storageNamePanel.SetActive(false);
     }
+
+    public void ShowTutorialBumperPanel()
+    {
+        tutorialPanelBumper.SetActive(true);
+    }
+
+    public void HideTutorialBumperPanel()
+    {
+        tutorialPanelBumper.SetActive(false);
+    }
+
+    public void ShowTutorialButtonB()
+    {
+        tutorialPanelButtonB.SetActive(true);
+    }
+
+    public void HideTutorialButtonB()
+    {
+        tutorialPanelButtonB.SetActive(false);
+    }
+    
+    public void TutorialSwitch(InputAction.CallbackContext context)
+    {
+        tutorialStage++;
+        switch (tutorialStage)
+        {
+            case 1:
+                HideAll();
+                ReturnColors();
+                ShowTutorialBumperPanel();
+                break;
+            case 2:
+                HideAll();
+                ReturnColors();
+                ShowTutorialButtonB();
+                break;
+            default:
+                HideAll();
+                ReturnColors();
+                tutorialStage = 0; // Needs to be at the end case
+                return;
+        }
+    }
+
+    void Update()
+    {
+        float pulse = Mathf.PingPong(Time.time, 1f);
+        switch (tutorialStage)
+        {
+            case 1:
+                Color newColorBumper = Color.Lerp(_bumperColor, tutorialHighlightColor, pulse);
+                BumperButton.GetComponent<Renderer>().material.color = newColorBumper;
+                break;
+            case 2:
+                Color newColorButtonB =  Color.Lerp(_bumperColor, tutorialHighlightColor, pulse);
+                ButtonB.GetComponent<Renderer>().material.color = newColorButtonB;
+                break;
+        }
+    }
+
+    private void ReturnColors()
+    {
+        BumperButton.GetComponent<Renderer>().material.color = _bumperColor;
+        ButtonB.GetComponent<Renderer>().material.color = _buttonBColor;
+    }
 }
+
+

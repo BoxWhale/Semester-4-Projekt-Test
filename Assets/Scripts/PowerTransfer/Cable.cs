@@ -12,45 +12,35 @@ public class Cable : MonoBehaviour
     
     
 
-    public void CreateConnection(Port portA, Port portB, List<Vector3> wirePoints)
+    public bool CreateConnection(Port portA, Port portB, List<Vector3> wirePoints)
     {
-        this.portA = portA;
-        this.portB = portB;
+        // Validate port types (must be one Input and one Output as of now)
+        if (portA.portType == portB.portType) return false;
+        
+        Port outPort = (portA.portType == PortType.Output) ? portA : portB;
+        Port inPort = (portA.portType == PortType.Input) ? portA : portB;
+        
+        this.portA = outPort;
+        this.portB = inPort;
         
         this.portA.isConected = true;
         this.portB.isConected = true;
         
-        this.portA.connectedCable = this;
-        this.portB.connectedCable = this;
-
-        Port outPort = null;
-        Port inPort = null;
-
-        if (portA.portType == PortType.Output && portB.portType == PortType.Input)
-        {
-            outPort = portA;
-            inPort = portB;
-        }
-        else if (portA.portType == PortType.Input && portB.portType == PortType.Output)
-        {
-            outPort = portB;
-            inPort = portA;
-        }
-        else
-        {
-            Debug.LogWarning("Tried to connect two ports of the same type! Wiring failed.");
-            return;
-        }
+        this.portA.connectedCables.Add(this);
+        this.portB.connectedCables.Add(this);
 
         // 2. Wire the Output to automatically update the Input
         outPort.OnValueChanged += inPort.SetValue;
         
         // 3. Kickstart the transfer immediately with whatever power the Output currently has
-        inPort.SetValue(outPort.value); 
+        // inPort.SetValue(outPort.value);        
+        // Force refresh the cable update
+        outPort.UpdateConnections();
         
         // Render the line
         line.positionCount = wirePoints.Count;
         line.SetPositions(wirePoints.ToArray());
+        return true;
     }
     
 
