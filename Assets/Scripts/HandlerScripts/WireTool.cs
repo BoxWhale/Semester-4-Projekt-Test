@@ -50,12 +50,14 @@ public class VRWireTool : MonoBehaviour
     // XR Interactable Click (Handles Start and End of Cables)
     public void OnPortSelected(SelectEnterEventArgs args)
     {
+        if (args.interactorObject.transform.parent.tag != "Right") return; // Only allow the right hand to weld
+        
         Port clickedPort = args.interactableObject.transform.GetComponent<Port>();
-        if (clickedPort == null || clickedPort.isConected) return;
+        if (clickedPort == null || !clickedPort.canAcceptMoreConnections) return;
 
         if (firstSelectedPort == null)
         {
-            // START THE CABLE
+            // Start the cable
             firstSelectedPort = clickedPort;
             firstSelectedPort.SelectedColor();
 
@@ -71,20 +73,36 @@ public class VRWireTool : MonoBehaviour
         }
         else
         {
-            // Ignore selection
+            // Ignore selection if its the same port
             if (firstSelectedPort == clickedPort) return;
-
+            // Check if there is already a cable connecting these exact two ports
+            foreach (Cable existingCable in firstSelectedPort.connectedCables)
+            {
+                if (existingCable.portA == clickedPort || existingCable.portB == clickedPort)
+                {
+                    Debug.LogWarning("These ports are already connected!");
+                    // Abort logic: delete tempCable, clear wirePoints...
+                    return;
+                }
+            }
             // Optional: Pole validation can be done here
-
-            // Finalize connection
             wirePoints.Add(clickedPort.transform.position);
-            tempCable.CreateConnection(firstSelectedPort, clickedPort, wirePoints);
-
-            // Reset Tool
-            firstSelectedPort.HidePort();
-            firstSelectedPort = null;
-            tempCable = null;
-            wirePoints.Clear();
+            
+            // Finalize connection
+            if (!tempCable.CreateConnection(firstSelectedPort, clickedPort, wirePoints))
+            {
+                Debug.LogWarning("Tried to connect two ports of the same type! Wiring Prevented");
+                
+                wirePoints.RemoveAt(wirePoints.Count-1);
+            }
+            else
+            {
+                // Reset Tool
+                firstSelectedPort.HidePort();
+                firstSelectedPort = null;
+                tempCable = null;
+                wirePoints.Clear();
+            }
         }
     }
 
@@ -122,7 +140,7 @@ public class VRWireTool : MonoBehaviour
     public void OnPortHover(HoverEnterEventArgs args)
     {
         Port hovered = args.interactableObject.transform.GetComponent<Port>();
-        if (hovered == null || hovered == firstSelectedPort) return; 
+        if (hovered == null || hovered == firstSelectedPort || !hovered.canAcceptMoreConnections) return; 
         hoveredPort = hovered;
         hoveredPort.ShowPort();
     }
