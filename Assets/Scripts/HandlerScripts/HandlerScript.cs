@@ -20,9 +20,7 @@ public class HandlerScript : MonoBehaviour
     
     [Tooltip("If true, TimeTickSystem will be instantiated on first frame of game start, otherwise it will not be created and no ticks will be sent. This can be useful for testing or if you want to control when the TimeTickSystem starts ticking.")]
     public bool CreateTickPulse = true;
-    
     public static HandlerScript Instance { get; private set; } // A static instance of the HandlerScript to allow other scripts to easily access it and register themselves for ticking updates without needing to find the HandlerScript in the scene or pass references around. This is a common pattern for manager or handler scripts that need to be accessed globally.
-    
     public List<PowerSource> powerSources = new List<PowerSource>(); // A list of power sources in the scene that need to be refreshed on each tick
 
     private void Awake()
