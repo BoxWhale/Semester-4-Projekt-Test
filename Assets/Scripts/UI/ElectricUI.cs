@@ -65,8 +65,8 @@ public class ElectricUI : MonoBehaviour
         
         storageNamePanel.SetActive(true);
         storageNameText.text = storageName;
-        storageCapacityText.text = $"{currentStorageAmount} / {maxCapacity}";
-        storageMaxOutputText.text = $"Max output: {storageMaxOutput}";
+        storageCapacityText.text = $"{currentStorageAmount}mV / {maxCapacity}mV";
+        storageMaxOutputText.text = $"Max output: {storageMaxOutput}mV";
     }
 
     public void HideStorageNamePanel()
